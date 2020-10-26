@@ -1,21 +1,20 @@
 package ipmi
 
 import (
-	"fmt"
-	"os"
-	"net"
 	"bytes"
-	"log"
-	"syscall"
+	"fmt"
 	"io"
+	"log"
+	"net"
+	"os"
 	"os/signal"
+	"syscall"
 	"time"
 )
 
-
 import (
-	"github.com/rmxymh/infra-ecosphere/bmc"
-	"github.com/rmxymh/infra-ecosphere/utils"
+	"../utils"
+	"../bmc"
 )
 
 var running bool = false
@@ -24,8 +23,8 @@ func DeserializeAndExecute(buf io.Reader, addr *net.UDPAddr, server *net.UDPConn
 	RMCPDeserializeAndExecute(buf, addr, server)
 }
 
-func IPMIServerHandler(BMCIP string) {
-	addr := fmt.Sprintf("%s:623", BMCIP)
+func IPMIServerHandler(BMCIP string, BMCPORT string) {
+	addr := fmt.Sprintf("%s:%s", BMCIP, BMCPORT)
 	serverAddr, err := net.ResolveUDPAddr("udp", addr)
 	utils.CheckError(err)
 
@@ -55,13 +54,21 @@ func IPMIServerServiceRun() {
 	}()
 
 	running = true
-	for ip, _ := range bmc.BMCs {
-		go func(ip string) {
-			log.Println("Start BMC Listener for BMC ", ip)
-			IPMIServerHandler(ip)
-			log.Println("BMC Listener ", ip, " is terminated.")
-		}(ip)
+	config := utils.LoadConfig("infra-ecosphere.cfg")
+	if config.BmcNet == "true" {
+		for ip, _ := range bmc.BMCs {
+			port := bmc.BMCs[ip].Port
+			go func(ip string, port string) {
+				log.Println("Start BMC Listener for BMC foo ", ip)
+				IPMIServerHandler(ip, port)
+				log.Println("BMC Listener ", ip, " is terminated.")
+			}(ip, string(port))
+		}
+	} else
+	{
+		log.Println("Dont start BMC loopback ips, cause BmcNet config set to false")
 	}
+
 
 	<- exitChan
 	log.Println("Wait for Listener terminating...")

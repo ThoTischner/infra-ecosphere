@@ -36,7 +36,7 @@ Then:
 
 ```sh
 $ cd ${GOPATH}/src
-$ go get github.com/rmxymh/infra-ecosphere
+$ go get github.com/ThoTischner/infra-ecosphere
 $ cd infra-ecoshphere
 ```
 
@@ -49,7 +49,7 @@ $ go get github.com/gorilla/mux
 $ go get github.com/jmcvetta/napping
 ```
 
-* Build: infra-ecosphere main package is located at ${GOPATH}/src/github.com/rmxymh/infra-ecosphere/infra-ecosphere 
+* Build: infra-ecosphere main package is located at ${GOPATH}/src/github.com/ThoTischner/infra-ecosphere/infra-ecosphere 
 
 ```sh
 $ go install
@@ -71,6 +71,7 @@ The format is as the following, and if you want more detailed information about 
 	"Nodes": [
 		{
 			"BMCIP": <BMC_IP>,
+            "BMCPORT": <BMC_PORT>,
 			"VMName": <Virtual_Machine_Name>
 		}
 	],
@@ -91,14 +92,17 @@ More detailed example:
 	"Nodes": [
 		{
 			"BMCIP": "127.0.1.1",
+            "BMCPORT": "6623",
 			"VMName": "TestVM01"
 		},
 		{
 			"BMCIP": "127.0.1.2",
+            "BMCPORT": "6623",
 			"VMName": "TestVM02"
 		},
 		{
 		    "BMCIP": "127.0.1.3",
+            "BMCPORT": "6623",
 		    "VMName": ""
 		}
 	],
@@ -108,7 +112,8 @@ More detailed example:
 			"Password": "admin"
 		}
 	],
-	"WebAPIPort":   9090
+	"WebAPIPort":   9090,
+    "BmcNet": "false"
 }
 ```
 
@@ -117,6 +122,7 @@ It indicate that we have 1 BMC username and password pair, and we have 3 Virtual
 * TestVM01: A Virtual Machine whose simulated BMC IP is 127.0.1.1
 * TestVM02: A Virtual Machine whose simulated BMC IP is 127.0.1.2
 * Note: we can find that BMC IP 127.0.1.3 maps to empty VMName. This configuration means that 127.0.1.3 maps to a mock VM, and it will response mocked IPMI response messages and does not affect any VM. This function is useful for large-scale IPMI command test. 
+* We will not bind BMC loopback IPs so only API service is available
 
 Here we need to be aware that:
 
@@ -150,7 +156,7 @@ Besides, you can operate VM via REST APIs, and currently this project supports t
 * Send power operation to the BMC: PUT /api/BMCs/<BMC_IP>/power
 * Set boot device to the BMC: PUT /api/BMCs/<BMC_IP>/bootdev
 
-For more detailed information, you can find it from [Web README.md](https://github.com/rmxymh/infra-ecosphere/blob/master/web/README.md)
+For more detailed information, you can find it from [Web README.md](https://github.com/ThoTischner/infra-ecosphere/blob/master/web/README.md)
 
 ## Note
 
@@ -171,7 +177,7 @@ More detail information can be found at func init() in ipmi_app.go, ipmi_chassis
 
 IPMI Proxy is a utility as a proxy which help us to pass the IPMI command out and response the result to the sender. 
 
-For more detailed information, you can obtain from this link: [IPMI Proxy README.md](https://github.com/rmxymh/infra-ecosphere/blob/master/ipmi-proxy/README.md) 
+For more detailed information, you can obtain from this link: [IPMI Proxy README.md](https://github.com/ThoTischner/infra-ecosphere/blob/master/ipmi-proxy/README.md) 
 
 
 ## TODO

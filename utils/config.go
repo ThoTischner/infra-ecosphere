@@ -1,17 +1,18 @@
 package utils
 
 import (
-	"os"
+	"../bmc"
+	"../vm"
+	"../web"
 	"encoding/json"
 	"log"
 	"net"
-	"github.com/rmxymh/infra-ecosphere/vm"
-	"github.com/rmxymh/infra-ecosphere/bmc"
-	"github.com/rmxymh/infra-ecosphere/web"
+	"os"
 )
 
 type ConfigNode struct {
 	BMCIP string
+    BMCPORT string
 	VMName string
 }
 
@@ -24,6 +25,7 @@ type Configuration struct {
 	Nodes		[]ConfigNode
 	BMCUsers	[]ConfigBMCUser
 	WebAPIPort	int
+	BmcNet		string
 }
 
 func LoadConfig(configFile string) Configuration {
@@ -32,6 +34,7 @@ func LoadConfig(configFile string) Configuration {
 		log.Println("Config: Failed to open config file ", configFile, ", ignore...")
 		return Configuration{
 			WebAPIPort: 9090,
+			BmcNet: "false",
 		}
 	}
 
@@ -49,7 +52,7 @@ func LoadConfig(configFile string) Configuration {
 			fakeNode = true
 		}
 		instance := vm.AddInstnace(node.VMName, fakeNode)
-		bmc.AddBMC(net.ParseIP(node.BMCIP), instance)
+		bmc.AddBMC(net.ParseIP(node.BMCIP), node.BMCPORT, instance)
 	}
 
 	for _, user := range configuration.BMCUsers {

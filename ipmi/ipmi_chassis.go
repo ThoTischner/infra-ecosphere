@@ -4,8 +4,8 @@ import (
 	"net"
 	"log"
 	"bytes"
-	"github.com/rmxymh/infra-ecosphere/bmc"
-	"github.com/rmxymh/infra-ecosphere/utils"
+	"../bmc"
+	"../utils"
 	"encoding/binary"
 )
 

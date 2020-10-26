@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/rmxymh/infra-ecosphere/ipmi"
-	"github.com/rmxymh/infra-ecosphere/utils"
+	"../ipmi"
+	"../utils"
 )
 
 func main() {

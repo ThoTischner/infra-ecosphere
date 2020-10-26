@@ -3,11 +3,12 @@ package bmc
 import (
 	"net"
 	"log"
-	"github.com/rmxymh/infra-ecosphere/vm"
+	"../vm"
 )
 
 type BMC struct {
 	Addr net.IP
+	Port string
 	VM vm.Instance
 }
 
@@ -18,14 +19,15 @@ func init() {
 	BMCs = make(map[string]BMC)
 }
 
-func AddBMC(ip net.IP, instance vm.Instance) BMC {
+func AddBMC(ip net.IP, port string, instance vm.Instance) BMC {
 	newBMC := BMC{
 		Addr: ip,
+		Port: port,
 		VM: instance,
 	}
 
 	BMCs[ip.String()] = newBMC
-	log.Println("Add new BMC with IP ", ip.String())
+	log.Println("Add new BMC with IP ", ip.String(), ":", port)
 
 	return newBMC
 }

@@ -5,7 +5,7 @@ import (
 	"log"
 )
 import (
-	"github.com/rmxymh/infra-ecosphere/bmc"
+	"../bmc"
 )
 
 type IPMISession struct {
